@@ -10,9 +10,6 @@ services:
 
   odoo13:
     image: odoo:13
-    build:
-      context: .
-      dockerfile: Dockerfile
     depends_on:
       - db
     ports:
