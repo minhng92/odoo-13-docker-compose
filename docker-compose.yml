@@ -1,12 +1,14 @@
 version: '2'
 services:
   db:
-    image: postgres:12
+    image: postgres:11
     environment:
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
       - POSTGRES_DB=postgres
     restart: always             # run as a service
+    volumes:
+        - ./postgresql:/var/lib/postgresql/data
 
   odoo13:
     image: odoo:13
