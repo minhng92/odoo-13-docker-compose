@@ -1,7 +1,6 @@
 #!/bin/bash
-set -e
-: ${DESTINATION:='odoo-13-docker-compose'}
-: ${PORT:='10013'}
+DESTINATION=$1
+PORT=$2
 # clone Odoo directory
 git clone --depth=1 https://github.com/minhng92/odoo-13-docker-compose $DESTINATION
 rm -rf $DESTINATION/.git
