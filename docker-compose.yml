@@ -2,6 +2,7 @@ version: '2'
 services:
   db:
     image: postgres:11
+    container_name: postgres11
     environment:
       - POSTGRES_PASSWORD=odoo
       - POSTGRES_USER=odoo
@@ -12,6 +13,7 @@ services:
 
   odoo13:
     image: odoo:13
+    container_name: odoo13
     depends_on:
       - db
     ports:
@@ -19,6 +21,10 @@ services:
     tty: true
     command: -- --dev=reload
 #    command: odoo scaffold /mnt/extra-addons/test_module
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
     volumes:
       - ./addons:/mnt/extra-addons
       - ./etc:/etc/odoo

@@ -1,9 +1,34 @@
+# Installing Odoo 13 with one command
+
+Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) yourself, then run:
+
+``` bash
+$ curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash
+```
+
+If `curl` is not found, install it:
+
+``` bash
+$ sudo apt-get install curl
+# or
+$ sudo yum install curl
+```
+
 # Usage
 
-Change the folder permission to make sure that the container is able to access the directory:
+Change the folder permission to make sure that the container is able to access the directories:
+
 ```
 $ sudo chmod -R 777 addons
 $ sudo chmod -R 777 etc
+$ sudo chmod -R 777 postgresql
+```
+
+Increase maximum number of files watching from 8192 (default) to **524288**. In order to avoid error when we run multiple Odoo instances. This is an *optional step*:
+
+```
+$ if grep -qF "fs.inotify.max_user_watches" /etc/sysctl.conf; then echo $(grep -F "fs.inotify.max_user_watches" /etc/sysctl.conf); else echo "fs.inotify.max_user_watches = 524288" | sudo tee -a /etc/sysctl.conf; fi
+$ sudo sysctl -p    # apply new config immediately
 ```
 
 Start the container:
@@ -11,14 +36,12 @@ Start the container:
 $ docker-compose up
 ```
 
-* Then open `localhost:10013` to access Odoo 13.0. If you want to start the server with a different port, change **10013** to another value in **docker-compose.yml**:
+Then open `localhost:10013` to access Odoo 13.0. If you want to start the server with a different port, change **10013** to another value in **docker-compose.yml**:
 
 ```
 ports:
  - "10013:8069"
 ```
-
-* Log file is printed @ **etc/odoo-server.log**
 
 To run in detached mode, execute this command:
 
@@ -30,9 +53,24 @@ $ docker-compose up -d
 
 The **addons** folder contains custom addons. Just put your custom addons if you have any.
 
-# Odoo configuration
+# Odoo configuration & log
 
-To change Odoo configuration, edit file: **etc/odoo.conf**.
+* To change Odoo configuration, edit file: **etc/odoo.conf**
+* Log file: **etc/odoo-server.log**
+
+# Odoo container management
+
+**Restart Odoo**:
+
+``` bash
+$ docker-compose restart
+```
+
+**Kill Odoo**:
+
+``` bash
+$ docker-compose down
+```
 
 # docker-compose.yml
 
