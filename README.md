@@ -3,8 +3,12 @@
 Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) yourself, then run:
 
 ``` bash
-$ curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash
+$ DESTINATION=odoo13 PORT=10013 curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash
 ```
+
+Some variables:
+* Destination directory: DESTINATION 
+* Odoo port: PORT
 
 If `curl` is not found, install it:
 
@@ -21,6 +25,7 @@ Change the folder permission to make sure that the container is able to access t
 ```
 $ sudo chmod -R 777 addons
 $ sudo chmod -R 777 etc
+$ mkdir -p postgresql
 $ sudo chmod -R 777 postgresql
 ```
 

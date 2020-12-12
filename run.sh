@@ -1,14 +1,21 @@
+#!/bin/bash
+set -e
+: ${DESTINATION:='odoo-13-docker-compose'}
+: ${PORT:='10013'}
 # clone Odoo directory
-git clone https://github.com/minhng92/odoo-13-docker-compose
-cd odoo-13-docker-compose
+git clone --depth=1 https://github.com/minhng92/odoo-13-docker-compose
+rm -rf $DESTINATION/.git
 # set permission
-sudo chmod -R 777 addons
-sudo chmod -R 777 etc
-sudo chmod -R 777 postgresql
-# set file watching config
+sudo chmod -R 777 $DESTINATION/addons
+sudo chmod -R 777 $DESTINATION/
+mkdir -p $DESTINATION/postgresql
+sudo chmod -R 777 $DESTINATION/postgresql
+# config
 if grep -qF "fs.inotify.max_user_watches" /etc/sysctl.conf; then echo $(grep -F "fs.inotify.max_user_watches" /etc/sysctl.conf); else echo "fs.inotify.max_user_watches = 524288" | sudo tee -a /etc/sysctl.conf; fi
 sudo sysctl -p
+sed -i 's/10013/$PORT/g' $DESTINATION/docker-compose.yml
 # run Odoo
-docker-compose up -d
+docker-compose -f $DESTINATION/docker-compose.yml up -d
 
 echo "Started Odoo @ http://localhost:10013"
+
