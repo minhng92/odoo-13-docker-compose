@@ -6,7 +6,7 @@ git clone --depth=1 https://github.com/minhng92/odoo-13-docker-compose $DESTINAT
 rm -rf $DESTINATION/.git
 # set permission
 sudo chmod -R 777 $DESTINATION/addons
-sudo chmod -R 777 $DESTINATION/
+sudo chmod -R 777 $DESTINATION/etc
 mkdir -p $DESTINATION/postgresql
 sudo chmod -R 777 $DESTINATION/postgresql
 # config
