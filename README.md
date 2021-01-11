@@ -1,13 +1,19 @@
 # Installing Odoo 13 with one command
 
+(Supports multiple Odoo instances on one server)
+
 Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) yourself, then run:
 
 ``` bash
-$ curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-13-docker-compose 10013
+# 1st Odoo @ localhost:10013
+$ curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-13-docker-compose-one 10013
+
+# 2nd Odoo @ localhost:11013
+$ curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-13-docker-compose-two 11013
 ```
 
 Some arguments:
-* First argument (**odoo-13-docker-compose**): destination folder
+* First argument (**odoo-13-docker-compose-one**): Odoo deploy folder
 * Second argument (**10013**): Odoo port
 
 If `curl` is not found, install it:
@@ -48,7 +54,7 @@ ports:
  - "10013:8069"
 ```
 
-To run in detached mode, execute this command:
+Run Odoo container in detached mode (be able to close terminal without stopping Odoo):
 
 ```
 $ docker-compose up -d
@@ -56,7 +62,7 @@ $ docker-compose up -d
 
 # Custom addons
 
-The **addons** folder contains custom addons. Just put your custom addons if you have any.
+The **addons/** folder contains custom addons. Just put your custom addons if you have any.
 
 # Odoo configuration & log
 
@@ -77,10 +83,18 @@ $ docker-compose restart
 $ docker-compose down
 ```
 
+# Remove Odoo & data
+
+Completely remove Odoo and all databases!
+
+``` sh
+$ sh remove_odoo.sh
+```
+
 # docker-compose.yml
 
 * odoo:13.0
-* postgres:12
+* postgres:11
 
 # Odoo 13 screenshots
 
