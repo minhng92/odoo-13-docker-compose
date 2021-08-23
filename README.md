@@ -1,19 +1,27 @@
-# Installing Odoo 13 with one command
+# Quick install
+
+Installing Odoo 13 with one command.
 
 (Supports multiple Odoo instances on one server)
 
 Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) yourself, then run:
 
 ``` bash
-# 1st Odoo @ localhost:10013
-$ curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-13-docker-compose-one 10013
-
-# 2nd Odoo @ localhost:11013
-$ curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-13-docker-compose-two 11013
+curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-one 10013
 ```
 
+to set up first Odoo instance @ `localhost:10013`
+
+and
+
+``` bash
+curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-two 11013
+```
+
+to set up another Odoo instance @ `localhost:11013`
+
 Some arguments:
-* First argument (**odoo-13-docker-compose-one**): Odoo deploy folder
+* First argument (**odoo-one**): Odoo deploy folder
 * Second argument (**10013**): Odoo port
 
 If `curl` is not found, install it:
@@ -26,28 +34,12 @@ $ sudo yum install curl
 
 # Usage
 
-Change the folder permission to make sure that the container is able to access the directories:
-
-```
-$ sudo chmod -R 777 addons
-$ sudo chmod -R 777 etc
-$ mkdir -p postgresql
-$ sudo chmod -R 777 postgresql
-```
-
-Increase maximum number of files watching from 8192 (default) to **524288**. In order to avoid error when we run multiple Odoo instances. This is an *optional step*:
-
-```
-$ if grep -qF "fs.inotify.max_user_watches" /etc/sysctl.conf; then echo $(grep -F "fs.inotify.max_user_watches" /etc/sysctl.conf); else echo "fs.inotify.max_user_watches = 524288" | sudo tee -a /etc/sysctl.conf; fi
-$ sudo sysctl -p    # apply new config immediately
-```
-
 Start the container:
-```
-$ docker-compose up
+``` sh
+docker-compose up
 ```
 
-Then open `localhost:10013` to access Odoo 13.0. If you want to start the server with a different port, change **10013** to another value in **docker-compose.yml**:
+* Then open `localhost:10013` to access Odoo 13.0. If you want to start the server with a different port, change **10013** to another value in **docker-compose.yml**:
 
 ```
 ports:
@@ -57,7 +49,24 @@ ports:
 Run Odoo container in detached mode (be able to close terminal without stopping Odoo):
 
 ```
-$ docker-compose up -d
+docker-compose up -d
+```
+
+**If you get the permission issue**, change the folder permission to make sure that the container is able to access the directory:
+
+``` sh
+$ git clone https://github.com/minhng92/odoo-13-docker-compose
+$ sudo chmod -R 777 addons
+$ sudo chmod -R 777 etc
+$ mkdir -p postgresql
+$ sudo chmod -R 777 postgresql
+```
+
+Increase maximum number of files watching from 8192 (default) to **524288**. In order to avoid error when we run multiple Odoo instances. This is an *optional step*. These commands are for Ubuntu user:
+
+```
+$ if grep -qF "fs.inotify.max_user_watches" /etc/sysctl.conf; then echo $(grep -F "fs.inotify.max_user_watches" /etc/sysctl.conf); else echo "fs.inotify.max_user_watches = 524288" | sudo tee -a /etc/sysctl.conf; fi
+$ sudo sysctl -p    # apply new config immediately
 ```
 
 # Custom addons
@@ -66,21 +75,28 @@ The **addons/** folder contains custom addons. Just put your custom addons if yo
 
 # Odoo configuration & log
 
-* To change Odoo configuration, edit file: **etc/odoo.conf**
+* To change Odoo configuration, edit file: **etc/odoo.conf**.
 * Log file: **etc/odoo-server.log**
+* Default database password (**admin_passwd**) is `minhng.info`, please change it @ [etc/odoo.conf#L60](/etc/odoo.conf#L60)
 
 # Odoo container management
+
+**Run Odoo**:
+
+``` bash
+docker-compose up -d
+```
 
 **Restart Odoo**:
 
 ``` bash
-$ docker-compose restart
+docker-compose restart
 ```
 
 **Kill Odoo**:
 
 ``` bash
-$ docker-compose down
+docker-compose down
 ```
 
 # Remove Odoo & data
@@ -88,7 +104,25 @@ $ docker-compose down
 Completely remove Odoo and all databases!
 
 ``` sh
-$ sh remove_odoo.sh
+sudo sh remove_odoo.sh
+```
+
+# Live chat
+
+In [docker-compose.yml#L22](docker-compose.yml#L22), we exposed port **20013** for live-chat on host.
+
+Configuring **nginx** to activate live chat feature (in production):
+
+``` conf
+#...
+server {
+    #...
+    location /longpolling/ {
+        proxy_pass http://0.0.0.0:20013/longpolling/;
+    }
+    #...
+}
+#...
 ```
 
 # docker-compose.yml
