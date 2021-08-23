@@ -7,7 +7,7 @@ Installing Odoo 13 with one command.
 Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) yourself, then run:
 
 ``` bash
-curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-one 10013
+curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-one 10013 20013
 ```
 
 to set up first Odoo instance @ `localhost:10013` (default master password: `minhng.info`)
@@ -15,7 +15,7 @@ to set up first Odoo instance @ `localhost:10013` (default master password: `min
 and
 
 ``` bash
-curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-two 11013
+curl -s https://raw.githubusercontent.com/minhng92/odoo-13-docker-compose/master/run.sh | sudo bash -s odoo-two 11013 21013
 ```
 
 to set up another Odoo instance @ `localhost:11013` (default master password: `minhng.info`)
@@ -23,6 +23,7 @@ to set up another Odoo instance @ `localhost:11013` (default master password: `m
 Some arguments:
 * First argument (**odoo-one**): Odoo deploy folder
 * Second argument (**10013**): Odoo port
+* Third argument (**20013**): live chat port
 
 If `curl` is not found, install it:
 
@@ -97,14 +98,6 @@ docker-compose restart
 
 ``` bash
 docker-compose down
-```
-
-# Remove Odoo & data
-
-Completely remove Odoo and all databases!
-
-``` sh
-sudo sh remove_odoo.sh
 ```
 
 # Live chat
